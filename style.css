@@ -1,0 +1,53 @@
+:root {
+    --cols: 5;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+#gameArea {
+    display: grid;
+    grid-template-columns: repeat(var(--cols), 1fr);
+    width: fit-content;
+    background-color: rgb(200, 200, 200);
+    border-top: 3px solid rgb(170, 170, 170);
+    border-left: 3px solid rgb(170, 170, 170);
+    border-right: 3px solid rgb(230, 230, 230);
+    border-bottom: 3px solid rgb(230, 230, 230);
+    font-weight: bold;
+    user-select: none;
+    font-family: monospace;
+    font-size: 1.5em;
+}
+
+.cell {
+    width: 30px;
+    aspect-ratio: 1;
+    background-color: rgb(200, 200, 200);
+    border-top: 3px solid rgb(230, 230, 230);
+    border-left: 3px solid rgb(230, 230, 230);
+    border-right: 3px solid rgb(170, 170, 170);
+    border-bottom: 3px solid rgb(170, 170, 170);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.open {
+    border: 1px solid rgb(170, 170, 170);
+}
+
+.status {
+    position: fixed;
+    top: 50%;
+    width: 100%;
+    padding-block: 3rem;
+    font-size: 5rem;
+    background-color: rgba(0, 0, 0, 0.315);
+    text-align: center;
+    transform: translateY(-50%);
+}
