@@ -126,6 +126,7 @@ class Minesweeper {
                         this.printStatus("LOSE");
                         break;
                     case 0:
+                        e.target.innerHTML = "";
                         this.openCellsAround(row, col);
                         break;
                     default:
