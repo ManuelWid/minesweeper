@@ -2,6 +2,7 @@ class Minesweeper {
     game_area = [];
     game_end = false;
     num_of_fields = 0;
+    flags = 0;
     colors = ["blue","green","red","darkblue","brown","cyan","black","grey"];
     gameElement = document.createElement("div");
     
@@ -23,9 +24,10 @@ class Minesweeper {
         this.parent.style.display = "flex";
         this.parent.style.justifyContent = "center";
         this.parent.style.alignItems = "center";
+        this.parent.style.position = "relative";
         this.gameElement.style.display = "grid";
         this.gameElement.style.gridTemplateColumns = `repeat(${this.cols}, 1fr)`;
-        this.gameElement.style.width = "fit-content";
+        this.gameElement.style.width = "100%";
         this.gameElement.style.backgroundColor = "rgb(200, 200, 200)";
         this.gameElement.style.borderTop = "3px solid rgb(170, 170, 170)";
         this.gameElement.style.borderLeft = "3px solid rgb(170, 170, 170)";
@@ -67,6 +69,7 @@ class Minesweeper {
                     }
                 }
                 this.mines--;
+                this.flags++;
             }
         }
     }
@@ -75,7 +78,7 @@ class Minesweeper {
         this.game_area.forEach((row, row_i) => {
             row.forEach((cell, cell_i) => {
                 const c = document.createElement('div');
-                c.style.width = "30px";
+                c.style.width = "100%";
                 c.style.aspectRatio = "1";
                 c.style.backgroundColor = "rgb(200, 200, 200)";
                 c.style.borderTop = "3px solid rgb(230, 230, 230)";
@@ -89,37 +92,53 @@ class Minesweeper {
                 c.dataset.col = cell_i;
                 c.addEventListener('click', (e)=>{
                     this.checkCell(e);
-                })
+                });
+                c.addEventListener('contextmenu', (e)=>{
+                    e.preventDefault();
+                    this.checkCell(e, true);
+                });
                 this.gameElement.append(c);
             });
         });
     }
 
-    checkCell(e){
+    checkCell(e, ctx=false){
         if(!this.gameEnd){
             const row = e.target.dataset.row;
             const col = e.target.dataset.col;
             const cell = this.game_area[row][col];
-            e.target.style.border = "1px solid rgb(170, 170, 170)";
-            switch(cell){
-                case -1:
-                    e.target.innerHTML = "X";
-                    this.gameEnd = true;
-                    this.printStatus("LOSE");
-                    break;
-                case 0:
-                    this.openCellsAround(row, col);
-                    break;
-                default:
-                    e.target.innerHTML = cell;
-                    e.target.style.color = this.colors[cell-1];
-                    e.target.dataset.open = "true";
-                    this.num_of_fields--;
-                    if(this.num_of_fields == 0){
+            if(ctx && e.target.dataset.open != "true"){
+                e.target.innerHTML = "F";
+                if(cell == -1){
+                    this.flags--;
+                    if(this.flags == 0){
                         this.gameEnd = true;
                         this.printStatus("WIN");
                     }
-                    break;
+                }
+            }
+            else{
+                e.target.style.border = "1px solid rgb(170, 170, 170)";
+                switch(cell){
+                    case -1:
+                        e.target.innerHTML = "X";
+                        this.gameEnd = true;
+                        this.printStatus("LOSE");
+                        break;
+                    case 0:
+                        this.openCellsAround(row, col);
+                        break;
+                    default:
+                        e.target.innerHTML = cell;
+                        e.target.style.color = this.colors[cell-1];
+                        e.target.dataset.open = "true";
+                        this.num_of_fields--;
+                        if(this.num_of_fields == 0){
+                            this.gameEnd = true;
+                            this.printStatus("WIN");
+                        }
+                        break;
+                }
             }
         }
     }
@@ -172,11 +191,11 @@ class Minesweeper {
     printStatus(msg){
         const e = document.createElement("p");
         e.innerHTML = msg;
-        e.style.position = "fixed";
+        e.style.position = "absolute";
         e.style.top = "50%";
         e.style.width = "100%";
         e.style.paddingBlock = "3rem";
-        e.style.fontSize = "5rem";
+        e.style.fontSize = "5em";
         e.style.backgroundColor = "rgba(0, 0, 0, 0.315)";
         e.style.textAlign = "center";
         e.style.transform = "translateY(-50%)";
@@ -184,4 +203,4 @@ class Minesweeper {
     }
 }
 
-new Minesweeper(10,10,10,document.body);
+new Minesweeper(10,10,2,document.getElementById("gameArea"));
