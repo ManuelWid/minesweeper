@@ -195,13 +195,11 @@ class Minesweeper {
         e.style.position = "absolute";
         e.style.top = "50%";
         e.style.width = "100%";
-        e.style.paddingBlock = "3rem";
-        e.style.fontSize = "5em";
+        e.style.paddingBlock = "5%";
+        e.style.fontSize = "3em";
         e.style.backgroundColor = "rgba(0, 0, 0, 0.315)";
         e.style.textAlign = "center";
         e.style.transform = "translateY(-50%)";
         this.parent.append(e);
     }
 }
-
-new Minesweeper(10,10,2,document.getElementById("gameArea"));
